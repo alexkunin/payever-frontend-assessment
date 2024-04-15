@@ -8,7 +8,8 @@ import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { map, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest, map, Observable } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { Appointment, DataService } from '../data.service';
 import { AppointmentComponent } from './appointment.component';
@@ -50,8 +51,16 @@ export class DayComponent {
   readonly #data = inject(DataService);
   readonly #matDialog = inject(MatDialog);
   readonly #confirmService = inject(ConfirmService);
-
-  readonly #isToday = isSameDate(new Date());
+  readonly #route = inject(ActivatedRoute);
+  readonly #dateParam$ = this.#route.params.pipe(map(params => params['date']));
+  readonly #date$ = this.#dateParam$.pipe(map(date => {
+    const matches = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+    if (matches) {
+      return new Date(+matches[1], +matches[2] - 1, +matches[3]);
+    } else {
+      return new Date();
+    }
+  }));
 
   readonly hours = Array.from({ length: 24 }, (_, i) => i);
   readonly pixelsPerMinute = 1;
@@ -59,12 +68,13 @@ export class DayComponent {
   @HostBinding('style.height.px')
   readonly height = this.hours.length * 60 * this.pixelsPerMinute;
 
-  readonly appointments$ = this.#data.getAppointmentsStream().pipe(
-    map(appointments =>
-      appointments
-        .filter(appointment => this.#isToday(appointment.start))
-        .sort((a, b) => a.start.getTime() - b.start.getTime()),
-    ),
+  readonly appointments$ = combineLatest([ this.#data.getAppointmentsStream(), this.#date$ ]).pipe(
+    map(([ appointments, date ]) => {
+      const isToday = isSameDate(date);
+      return appointments
+        .filter(appointment => isToday(appointment.start))
+        .sort((a, b) => a.start.getTime() - b.start.getTime());
+    }),
   );
 
   readonly trackByValue = <T>(index: number, value: T): T => value;
