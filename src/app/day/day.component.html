@@ -8,13 +8,12 @@
 </button>
 
 <div class="hours">
-  @for (hour of hours; track hour) {
-    <app-hour
-      [hour]="hour"
-      [style.top.px]="hour * 60 * pixelsPerMinute"
-      [style.height.px]="60 * pixelsPerMinute"
-    ></app-hour>
-  }
+  <app-hour
+    *ngFor="let hour of hours; trackBy: trackByValue"
+    [hour]="hour"
+    [style.top.px]="hour * 60 * pixelsPerMinute"
+    [style.height.px]="60 * pixelsPerMinute"
+  ></app-hour>
 </div>
 
 <app-current-time-indicator [pixelsPerMinute]="pixelsPerMinute"></app-current-time-indicator>
@@ -24,18 +23,17 @@
   #appointments
   (dblclick)="addAppointment(($event.clientY - appointments.getBoundingClientRect().top) / pixelsPerMinute)"
 >
-  @for (appointment of appointments$ | async; track appointment.id) {
-    <app-appointment
-      #cdkDrag="cdkDrag"
-      [data]="appointment"
-      [style.transform]="'translate3d(0, ' + (appointment.start.getHours() * 60 + appointment.start.getMinutes()) * pixelsPerMinute + 'px, 0)'"
-      [style.height.px]="appointment.length * pixelsPerMinute"
-      cdkDrag
-      [cdkDragBoundary]="appointments"
-      (cdkDragEnded)="setAppointmentStart(appointment, (cdkDrag.element.nativeElement.getBoundingClientRect().top -
-      appointments.getBoundingClientRect().top) / pixelsPerMinute);"
-      (dblclick)="editAppointment(appointment); $event.stopPropagation();"
-      (delete)="deleteAppointment(appointment)"
-    ></app-appointment>
-  }
+  <app-appointment
+    *ngFor="let appointment of appointments$ | async; trackBy: trackById"
+    #cdkDrag="cdkDrag"
+    [data]="appointment"
+    [style.transform]="'translate3d(0, ' + (appointment.start.getHours() * 60 + appointment.start.getMinutes()) * pixelsPerMinute + 'px, 0)'"
+    [style.height.px]="appointment.length * pixelsPerMinute"
+    cdkDrag
+    [cdkDragBoundary]="appointments"
+    (cdkDragEnded)="setAppointmentStart(appointment, (cdkDrag.element.nativeElement.getBoundingClientRect().top -
+    appointments.getBoundingClientRect().top) / pixelsPerMinute);"
+    (dblclick)="editAppointment(appointment); $event.stopPropagation();"
+    (delete)="deleteAppointment(appointment)"
+  ></app-appointment>
 </div>

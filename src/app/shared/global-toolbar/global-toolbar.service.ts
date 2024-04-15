@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 type WidgetItem = {
   id: number;
   type: 'widget';
-  data: TemplateRef<any>;
+  data: TemplateRef<unknown>;
 };
 
 @Injectable({
@@ -15,7 +15,7 @@ export class GlobalToolbarService {
   readonly #items = signal<WidgetItem[]>([]);
   #nextItemId = 1;
 
-  addWidget(tpl: TemplateRef<any>): () => void {
+  addWidget(tpl: TemplateRef<unknown>): () => void {
     const id = this.#nextItemId++;
     this.#items.update(widgets => [ { id, type: 'widget', data: tpl }, ...widgets ]);
     return () => this.#items.update(buttons => buttons.filter(b => b.id === id));

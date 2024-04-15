@@ -9,7 +9,7 @@ export class GlobalToolbarWidgetDirective {
   readonly #globalToolbarService = inject(GlobalToolbarService);
 
   constructor(
-    tpl: TemplateRef<any>,
+    tpl: TemplateRef<unknown>,
   ) {
     inject(DestroyRef).onDestroy(this.#globalToolbarService.addWidget(tpl));
   }

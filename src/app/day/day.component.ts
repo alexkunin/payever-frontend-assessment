@@ -1,7 +1,7 @@
 import { ConfirmService } from '@/shared/confirm';
 import { GlobalToolbarWidgetDirective } from '@/shared/global-toolbar';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgForOf } from '@angular/common';
 import { Component, HostBinding, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,6 +35,7 @@ function isSameDate(date1: Date) {
     MatIcon,
     MatIconButton,
     MatTooltip,
+    NgForOf,
   ],
   templateUrl: './day.component.html',
   styleUrl: './day.component.scss'
@@ -55,6 +56,9 @@ export class DayComponent {
   readonly appointments$ = this.#data.getAppointmentsStream().pipe(
     map(appointments => appointments.filter(appointment => this.#isToday(appointment.start))),
   );
+
+  readonly trackByValue = <T>(index: number, value: T): T => value;
+  readonly trackById = <T extends { id: PropertyKey }>(index: number, value: T) => value.id;
 
   setAppointmentStart(appointment: Readonly<Appointment>, minutes: number): void {
     minutes = Math.floor(minutes / 15) * 15;
