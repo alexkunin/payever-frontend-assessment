@@ -8,6 +8,8 @@
   }
 </div>
 
+<app-current-time-indicator [pixelsPerMinute]="pixelsPerMinute"></app-current-time-indicator>
+
 <div class="appointments" #appointments>
   @for (appointment of appointments$ | async; track appointment.id) {
     <app-appointment

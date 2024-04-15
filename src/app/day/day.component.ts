@@ -8,6 +8,7 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
 import { Appointment, DataService } from '../data.service';
 import { GlobalToolbarService } from '../global-toolbar.service';
 import { AppointmentComponent } from './appointment.component';
+import { CurrentTimeIndicatorComponent } from './current-time-indicator.component';
 import { HourComponent } from './hour.component';
 
 function isSameDate(date1: Date) {
@@ -26,6 +27,7 @@ function isSameDate(date1: Date) {
     HourComponent,
     AppointmentComponent,
     CdkDrag,
+    CurrentTimeIndicatorComponent,
   ],
   templateUrl: './day.component.html',
   styleUrl: './day.component.scss'
