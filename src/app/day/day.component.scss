@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  position: relative;
+  box-sizing: content-box;
+  margin: 10px;
+  background: white;
+}
+
+.hours,
+.appointments {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.hours {
+  border-bottom: 1px dotted silver;
+}
+
+app-appointment {
+  position: absolute;
+  left: 0;
+  right: 0;
+}

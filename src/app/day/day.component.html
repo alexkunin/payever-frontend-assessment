@@ -1,0 +1,19 @@
+<div class="hours">
+  @for (hour of hours; track hour) {
+    <app-hour
+      [hour]="hour"
+      [style.top.px]="hour * 60 * pixelsPerMinute"
+      [style.height.px]="60 * pixelsPerMinute"
+    ></app-hour>
+  }
+</div>
+
+<div class="appointments">
+  @for (appointment of appointments$ | async; track appointment.id) {
+    <app-appointment
+      [data]="appointment"
+      [style.top.px]="(appointment.start.getHours() * 60 + appointment.start.getMinutes()) * pixelsPerMinute"
+      [style.height.px]="appointment.length * pixelsPerMinute"
+    ></app-appointment>
+  }
+</div>
