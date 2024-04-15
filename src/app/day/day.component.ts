@@ -3,11 +3,12 @@ import { GlobalToolbarWidgetDirective } from '@/shared/global-toolbar';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { Component, HostBinding, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { Appointment, DataService } from '../data.service';
 import { AppointmentComponent } from './appointment.component';
@@ -20,6 +21,11 @@ function isSameDate(date1: Date) {
       date1.getMonth() === date2.getMonth() &&
       date1.getDate() === date2.getDate();
   }
+}
+
+function appointmentsIntersect(a: Readonly<Appointment>, b: Readonly<Appointment>): boolean {
+  return a.start.getTime() < b.start.getTime() + b.length * 60 * 1000 &&
+    a.start.getTime() + a.length * 60 * 1000 > b.start.getTime();
 }
 
 @Component({
@@ -54,11 +60,48 @@ export class DayComponent {
   readonly height = this.hours.length * 60 * this.pixelsPerMinute;
 
   readonly appointments$ = this.#data.getAppointmentsStream().pipe(
-    map(appointments => appointments.filter(appointment => this.#isToday(appointment.start))),
+    map(appointments =>
+      appointments
+        .filter(appointment => this.#isToday(appointment.start))
+        .sort((a, b) => a.start.getTime() - b.start.getTime()),
+    ),
   );
 
   readonly trackByValue = <T>(index: number, value: T): T => value;
   readonly trackById = <T extends { id: PropertyKey }>(index: number, value: T) => value.id;
+
+  readonly #offsets$: Observable<Map<Appointment, {
+    width: string,
+    left: string
+  }>> = this.appointments$.pipe(
+    map(appointments => {
+      const clusters = appointments.reduce((clusters, appointment) => {
+        if ((clusters[clusters.length - 1] ?? []).some(previous => appointmentsIntersect(previous, appointment))) {
+          clusters[clusters.length - 1].push(appointment);
+        } else {
+          clusters.push([ appointment ]);
+        }
+        return clusters;
+      }, [] as Readonly<Appointment>[][]);
+
+      return new Map(
+        clusters.flatMap(cluster => {
+          return cluster.map((appointment, i) => {
+              return [
+                appointment,
+                {
+                  width: (100 / cluster.length) + '%',
+                  left: (100 / cluster.length * i) + '%',
+                },
+              ];
+            },
+          );
+        }),
+      );
+    }),
+  );
+
+  readonly offsets = toSignal(this.#offsets$);
 
   setAppointmentStart(appointment: Readonly<Appointment>, minutes: number): void {
     minutes = Math.floor(minutes / 15) * 15;

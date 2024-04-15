@@ -60,6 +60,20 @@ export class DataService {
       title: 'Something tomorrow',
       description: 'This is the third appointment'
     });
+    this.addAppointment({
+      id: -1,
+      start: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        10,
+        15,
+        0,
+      ),
+      length: 30,
+      title: 'Short break',
+      description: 'This is the fifth appointment'
+    });
   }
 
   getAppointmentsStream(): Observable<ReadonlyArray<Readonly<Appointment>>> {

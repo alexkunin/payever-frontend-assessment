@@ -29,6 +29,8 @@
     [data]="appointment"
     [style.transform]="'translate3d(0, ' + (appointment.start.getHours() * 60 + appointment.start.getMinutes()) * pixelsPerMinute + 'px, 0)'"
     [style.height.px]="appointment.length * pixelsPerMinute"
+    [style.left]="offsets()?.get(appointment)?.left ?? null"
+    [style.width]="offsets()?.get(appointment)?.width ?? null"
     cdkDrag
     [cdkDragBoundary]="appointments"
     (cdkDragEnded)="setAppointmentStart(appointment, (cdkDrag.element.nativeElement.getBoundingClientRect().top -
