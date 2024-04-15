@@ -1,9 +1,10 @@
+import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, HostBinding, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
-import { DataService } from '../data.service';
+import { Appointment, DataService } from '../data.service';
 import { GlobalToolbarService } from '../global-toolbar.service';
 import { AppointmentComponent } from './appointment.component';
 import { HourComponent } from './hour.component';
@@ -23,6 +24,7 @@ function isSameDate(date1: Date) {
     AsyncPipe,
     HourComponent,
     AppointmentComponent,
+    CdkDrag,
   ],
   templateUrl: './day.component.html',
   styleUrl: './day.component.scss'
@@ -67,5 +69,19 @@ export class DayComponent {
         });
       },
     }));
+  }
+
+  setAppointmentStart(appointment: Readonly<Appointment>, minutes: number) {
+    minutes = Math.floor(minutes / 15) * 15;
+    this.#data.updateAppointment({
+      ...appointment,
+      start: new Date(
+        appointment.start.getFullYear(),
+        appointment.start.getMonth(),
+        appointment.start.getDate(),
+        Math.floor(minutes / 60),
+        minutes % 60,
+      ),
+    });
   }
 }
