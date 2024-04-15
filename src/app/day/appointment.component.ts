@@ -1,3 +1,4 @@
+import { FormatTimePipe } from '@/shared/format-time.pipe';
 import { Component, input, output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -9,10 +10,11 @@ import { Appointment } from '../data.service';
   imports: [
     MatIconButton,
     MatIcon,
+    FormatTimePipe,
   ],
   template: `
     <p>
-      {{ data().start.getHours() }}:{{ data().start.getMinutes().toString().padStart(2, '0') }}
+      {{ data().start | formatTime }}
       {{ data().title }}
       <button mat-icon-button (click)="delete.emit()">
         <mat-icon>delete</mat-icon>

@@ -1,11 +1,14 @@
+import { FormatTimePipe } from '@/shared/format-time.pipe';
 import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-hour',
   standalone: true,
-  imports: [],
+  imports: [
+    FormatTimePipe,
+  ],
   template: `
-    {{ hour () }}:00
+    {{ hour() * 60 | formatTime }}
   `,
   styles: `
     :host {

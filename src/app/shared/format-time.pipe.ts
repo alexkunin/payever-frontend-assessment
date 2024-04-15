@@ -2,16 +2,22 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'formatTime',
-  standalone: true
+  standalone: true,
 })
 export class FormatTimePipe implements PipeTransform {
-  transform(timeInMinutes: number | null | undefined): string {
-    if (typeof timeInMinutes !== 'number') {
+  transform(time: Date | number | null | undefined): string {
+    let timeInMinutes: number;
+
+    if (typeof time === 'number') {
+      timeInMinutes = time;
+    } else if (time instanceof Date) {
+      timeInMinutes = time.getHours() * 60 + time.getMinutes();
+    } else {
       return '';
     }
 
     const hours = Math.floor(timeInMinutes / 60);
     const minutes = timeInMinutes % 60;
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+    return `${ hours }:${ minutes.toString().padStart(2, '0') }`;
   }
 }
