@@ -15,41 +15,50 @@ export interface Appointment {
 })
 export class DataService {
   private readonly appointments = signal<Appointment[]>([]);
+  private nextId = 1;
 
   constructor() {
-    this.appointments.set([
-      {
-        id: 1,
-        start: new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          new Date().getDate(),
-          8,
-          0,
-          0,
-        ),
-        length: 240,
-        title: 'Payever Assessment',
-        description: 'This is the first appointment'
-      },
-      {
-        id: 2,
-        start: new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          new Date().getDate(),
-          13,
-          0,
-          0,
-        ),
-        length: 30,
-        title: 'Lunch',
-        description: 'This is the second appointment'
-      },
-    ]);
+    this.addAppointment({
+      id: -1,
+      start: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        8,
+        0,
+        0,
+      ),
+      length: 240,
+      title: 'Payever Assessment',
+      description: 'This is the first appointment'
+    });
+    this.addAppointment({
+      id: -1,
+      start: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        13,
+        0,
+        0,
+      ),
+      length: 30,
+      title: 'Lunch',
+      description: 'This is the second appointment'
+    });
   }
 
   getAppointmentsStream(): Observable<ReadonlyArray<Readonly<Appointment>>> {
     return toObservable(this.appointments);
+  }
+
+  addAppointment(appointment: Appointment) {
+    if (appointment.id === -1) {
+      appointment = {
+        ...appointment,
+        id: this.nextId++,
+      };
+    }
+    this.appointments.update(appointments => [...appointments, appointment]);
   }
 }

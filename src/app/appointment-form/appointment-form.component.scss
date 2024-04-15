@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  position: relative;
+  box-sizing: content-box;
+  margin: 10px;
+  background: white;
+  min-width: 500px;
+}
+
+mat-form-field {
+  display: block;
+  width: 100%;
+}

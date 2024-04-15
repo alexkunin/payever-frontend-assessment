@@ -1,7 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, DestroyRef, HostBinding, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
+import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { DataService } from '../data.service';
+import { GlobalToolbarService } from '../global-toolbar.service';
 import { AppointmentComponent } from './appointment.component';
 import { HourComponent } from './hour.component';
 
@@ -26,6 +29,9 @@ function isSameDate(date1: Date) {
 })
 export class DayComponent {
   readonly #data = inject(DataService);
+  readonly #globalToolbarService = inject(GlobalToolbarService);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #matDialog = inject(MatDialog);
 
   readonly #isToday = isSameDate(new Date());
 
@@ -38,4 +44,28 @@ export class DayComponent {
   readonly appointments$ = this.#data.getAppointmentsStream().pipe(
     filter(appointments => this.#isToday(appointments[0].start)),
   );
+
+  constructor() {
+    this.#destroyRef.onDestroy(this.#globalToolbarService.addButton({
+      id: 'add',
+      icon: 'add',
+      label: 'Add new appointment',
+      action: () => {
+        AppointmentFormComponent.open(
+          this.#matDialog,
+          {
+            id: -1,
+            start: new Date(),
+            length: 30,
+            title: '',
+            description: '',
+          }
+        ).subscribe(appointment => {
+          if (appointment) {
+            this.#data.addAppointment(appointment);
+          }
+        });
+      },
+    }));
+  }
 }
