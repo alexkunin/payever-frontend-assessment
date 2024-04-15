@@ -1,13 +1,11 @@
+<app-current-time *appGlobalToolbarWidget/>
+
 <mat-toolbar class="example-header">
   <span>Calendar</span>
 
   <div style="flex: auto;"></div>
 
-  @for (button of buttons$ | async; track button.id) {
-    <button mat-icon-button [matTooltip]="button.label" (click)="button.action()">
-      <mat-icon>{{ button.icon }}</mat-icon>
-    </button>
-  }
+  <app-global-toolbar-widgets/>
 </mat-toolbar>
 
 <mat-sidenav-container class="example-container">

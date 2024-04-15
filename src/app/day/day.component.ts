@@ -1,12 +1,15 @@
 import { ConfirmService } from '@/shared/confirm';
+import { GlobalToolbarWidgetDirective } from '@/shared/global-toolbar';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, HostBinding, inject } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { map } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { Appointment, DataService } from '../data.service';
-import { GlobalToolbarService } from '../global-toolbar.service';
 import { AppointmentComponent } from './appointment.component';
 import { CurrentTimeIndicatorComponent } from './current-time-indicator.component';
 import { HourComponent } from './hour.component';
@@ -28,14 +31,16 @@ function isSameDate(date1: Date) {
     AppointmentComponent,
     CdkDrag,
     CurrentTimeIndicatorComponent,
+    GlobalToolbarWidgetDirective,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
   ],
   templateUrl: './day.component.html',
   styleUrl: './day.component.scss'
 })
 export class DayComponent {
   readonly #data = inject(DataService);
-  readonly #globalToolbarService = inject(GlobalToolbarService);
-  readonly #destroyRef = inject(DestroyRef);
   readonly #matDialog = inject(MatDialog);
   readonly #confirmService = inject(ConfirmService);
 
@@ -50,30 +55,6 @@ export class DayComponent {
   readonly appointments$ = this.#data.getAppointmentsStream().pipe(
     map(appointments => appointments.filter(appointment => this.#isToday(appointment.start))),
   );
-
-  constructor() {
-    this.#destroyRef.onDestroy(this.#globalToolbarService.addButton({
-      id: 'add',
-      icon: 'add',
-      label: 'Add new appointment',
-      action: () => {
-        AppointmentFormComponent.open(
-          this.#matDialog,
-          {
-            id: -1,
-            start: new Date(),
-            length: 30,
-            title: '',
-            description: '',
-          }
-        ).subscribe(appointment => {
-          if (appointment) {
-            this.#data.addAppointment(appointment);
-          }
-        });
-      },
-    }));
-  }
 
   setAppointmentStart(appointment: Readonly<Appointment>, minutes: number): void {
     minutes = Math.floor(minutes / 15) * 15;
@@ -113,7 +94,7 @@ export class DayComponent {
     });
   }
 
-  addAppointment(minute: number) {
+  addAppointment(minute: number = new Date().getHours() * 60 + new Date().getMinutes()): void {
     minute = Math.floor(minute / 15) * 15;
     AppointmentFormComponent.open(
       this.#matDialog,

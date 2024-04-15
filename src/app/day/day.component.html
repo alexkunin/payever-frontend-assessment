@@ -1,3 +1,12 @@
+<button
+  *appGlobalToolbarWidget
+  mat-icon-button
+  matTooltip="Add appointment"
+  (click)="addAppointment()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+
 <div class="hours">
   @for (hour of hours; track hour) {
     <app-hour
