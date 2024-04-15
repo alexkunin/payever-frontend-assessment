@@ -62,7 +62,7 @@ export class AppointmentFormComponent {
       },
     ),
     length: this.#fb.control(
-      Math.ceil(this.#data.length / 30) * 30,
+      Math.ceil(this.#data.length / 15) * 15,
       {
         nonNullable: true,
         validators: [
