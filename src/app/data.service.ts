@@ -46,6 +46,20 @@ export class DataService {
       title: 'Lunch',
       description: 'This is the second appointment'
     });
+    this.addAppointment({
+      id: -1,
+      start: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate() + 1,
+        13,
+        0,
+        0,
+      ),
+      length: 30,
+      title: 'Something tomorrow',
+      description: 'This is the third appointment'
+    });
   }
 
   getAppointmentsStream(): Observable<ReadonlyArray<Readonly<Appointment>>> {
