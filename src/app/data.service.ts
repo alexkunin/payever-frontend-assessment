@@ -52,7 +52,7 @@ export class DataService {
     return toObservable(this.appointments);
   }
 
-  addAppointment(appointment: Readonly<Appointment>) {
+  addAppointment(appointment: Readonly<Appointment>): void {
     if (appointment.id === -1) {
       appointment = {
         ...appointment,
@@ -62,7 +62,11 @@ export class DataService {
     this.appointments.update(appointments => [...appointments, appointment]);
   }
 
-  updateAppointment(appointment: Readonly<Appointment>) {
+  updateAppointment(appointment: Readonly<Appointment>): void {
     this.appointments.update(appointments => appointments.map(a => a.id === appointment.id ? appointment : a));
+  }
+
+  deleteAppointment(appointmentId: Appointment['id']): void {
+    this.appointments.update(appointments => appointments.filter(a => a.id !== appointmentId));
   }
 }

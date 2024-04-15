@@ -1,14 +1,22 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Appointment } from '../data.service';
 
 @Component({
   selector: 'app-appointment',
   standalone: true,
-  imports: [],
+  imports: [
+    MatIconButton,
+    MatIcon,
+  ],
   template: `
     <p>
       {{ data().start.getHours() }}:{{ data().start.getMinutes().toString().padStart(2, '0') }}
       {{ data().title }}
+      <button mat-icon-button (click)="delete.emit()">
+        <mat-icon>delete</mat-icon>
+      </button>
     </p>
   `,
   styles: `
@@ -18,14 +26,24 @@ import { Appointment } from '../data.service';
       border: 1px solid skyblue;
       border-radius: 5px;
       background-color: lightblue;
+      position: relative;
+      min-height: 30px;
     }
 
     p {
       margin: 0;
       padding: 5px;
     }
+
+    button {
+      scale: 0.6;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+    }
   `
 })
 export class AppointmentComponent {
   readonly data = input.required<Appointment>();
+  readonly delete = output();
 }

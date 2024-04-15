@@ -20,6 +20,7 @@
       (cdkDragEnded)="setAppointmentStart(appointment, (cdkDrag.element.nativeElement.getBoundingClientRect().top -
       appointments.getBoundingClientRect().top) / pixelsPerMinute);"
       (dblclick)="editAppointment(appointment)"
+      (delete)="deleteAppointment(appointment)"
     ></app-appointment>
   }
 </div>

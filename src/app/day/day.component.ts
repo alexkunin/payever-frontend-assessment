@@ -2,7 +2,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, HostBinding, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { filter } from 'rxjs';
+import { map } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { Appointment, DataService } from '../data.service';
 import { GlobalToolbarService } from '../global-toolbar.service';
@@ -44,7 +44,7 @@ export class DayComponent {
   readonly height = this.hours.length * 60 * this.pixelsPerMinute;
 
   readonly appointments$ = this.#data.getAppointmentsStream().pipe(
-    filter(appointments => this.#isToday(appointments[0].start)),
+    map(appointments => appointments.filter(appointment => this.#isToday(appointment.start))),
   );
 
   constructor() {
@@ -94,5 +94,9 @@ export class DayComponent {
         this.#data.updateAppointment(appointment);
       }
     });
+  }
+
+  deleteAppointment(appointment: Readonly<Appointment>): void {
+    this.#data.deleteAppointment(appointment.id);
   }
 }
