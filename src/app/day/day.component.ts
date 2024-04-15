@@ -1,3 +1,4 @@
+import { ConfirmService } from '@/shared/confirm';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, HostBinding, inject } from '@angular/core';
@@ -34,6 +35,7 @@ export class DayComponent {
   readonly #globalToolbarService = inject(GlobalToolbarService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #matDialog = inject(MatDialog);
+  readonly #confirmService = inject(ConfirmService);
 
   readonly #isToday = isSameDate(new Date());
 
@@ -97,6 +99,15 @@ export class DayComponent {
   }
 
   deleteAppointment(appointment: Readonly<Appointment>): void {
-    this.#data.deleteAppointment(appointment.id);
+    this.#confirmService.ask({
+      title: 'Warning!',
+      message: 'Are you sure you want to delete this appointment?',
+      confirmText: 'Delete',
+      cancelText: 'Leave it',
+    }).subscribe(confirmed => {
+      if (confirmed) {
+        this.#data.deleteAppointment(appointment.id);
+      }
+    });
   }
 }
