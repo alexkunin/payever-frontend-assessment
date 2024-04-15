@@ -9,7 +9,7 @@ import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { Observable } from 'rxjs';
 import { Appointment } from '../data.service';
-import { FormatTimePipe } from '../format-time.pipe';
+import { FormatTimePipe } from '@/shared/format-time.pipe';
 
 export type AppointmentFormDialogData = Readonly<Appointment>;
 
