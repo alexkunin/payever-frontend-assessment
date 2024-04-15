@@ -24,17 +24,22 @@ import { Appointment } from '../data.service';
   styles: `
     :host {
       display: block;
-      box-sizing: border-box;
-      border: 1px solid skyblue;
-      border-radius: 5px;
-      background-color: lightblue;
       position: relative;
       min-height: 30px;
     }
 
     p {
+      position: absolute;
       margin: 0;
+      height: 100%;
       padding: 5px;
+      left: 2px;
+      right: 2px;
+      min-height: 30px;
+      box-sizing: border-box;
+      border: 1px solid skyblue;
+      border-radius: 5px;
+      background-color: lightblue;
     }
 
     button {
