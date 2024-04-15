@@ -1,5 +1,6 @@
 import { CurrentTimeComponent } from '@/shared/current-time';
 import { GlobalToolbarWidgetDirective, GlobalToolbarWidgetsComponent } from '@/shared/global-toolbar';
+import { NavigationService } from '@/shared/navigation.service';
 import { NextAppointmentComponent } from '@/shared/next-appointment';
 import { TotalsComponent } from '@/shared/totals';
 import { AsyncPipe } from '@angular/common';
@@ -8,7 +9,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCalendar } from '@angular/material/datepicker';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbar } from '@angular/material/toolbar';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
 @Component({
@@ -32,15 +33,11 @@ export class AppComponent {
       return new Date();
     }
   }));
-  readonly #router = inject(Router);
+  readonly #navigation = inject(NavigationService);
 
   title = 'calendar';
 
   redirect(date: Date | null) {
-    let url = '/day';
-    if (date) {
-      url += '/' + date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
-    }
-    this.#router.navigateByUrl(url);
+    this.#navigation.goToDate(date);
   }
 }

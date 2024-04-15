@@ -7,6 +7,24 @@
   <mat-icon>add</mat-icon>
 </button>
 
+<button
+  *appGlobalToolbarWidget
+  mat-icon-button
+  matTooltip="Next day"
+  (click)="nextDay()"
+>
+  <mat-icon>chevron_right</mat-icon>
+</button>
+
+<button
+  *appGlobalToolbarWidget
+  mat-icon-button
+  matTooltip="Previous day"
+  (click)="previousDay()"
+>
+  <mat-icon>chevron_left</mat-icon>
+</button>
+
 <div class="hours">
   <app-hour
     *ngFor="let hour of hours; trackBy: trackByValue"

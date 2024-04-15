@@ -1,5 +1,6 @@
 import { ConfirmService } from '@/shared/confirm';
 import { GlobalToolbarWidgetDirective } from '@/shared/global-toolbar';
+import { NavigationService } from '@/shared/navigation.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { Component, HostBinding, inject } from '@angular/core';
@@ -9,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, take } from 'rxjs';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { Appointment, DataService } from '../data.service';
 import { AppointmentComponent } from './appointment.component';
@@ -61,6 +62,7 @@ export class DayComponent {
       return new Date();
     }
   }));
+  readonly #navigation = inject(NavigationService);
 
   readonly hours = Array.from({ length: 24 }, (_, i) => i);
   readonly pixelsPerMinute = 1;
@@ -172,6 +174,20 @@ export class DayComponent {
       if (appointment) {
         this.#data.addAppointment(appointment);
       }
+    });
+  }
+
+  previousDay(): void {
+    this.#date$.pipe(take(1)).subscribe(date => {
+      date.setDate(date.getDate() - 1);
+      this.#navigation.goToDate(date);
+    });
+  }
+
+  nextDay(): void {
+    this.#date$.pipe(take(1)).subscribe(date => {
+      date.setDate(date.getDate() + 1);
+      this.#navigation.goToDate(date);
     });
   }
 }
