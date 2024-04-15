@@ -71,7 +71,7 @@ export class DayComponent {
     }));
   }
 
-  setAppointmentStart(appointment: Readonly<Appointment>, minutes: number) {
+  setAppointmentStart(appointment: Readonly<Appointment>, minutes: number): void {
     minutes = Math.floor(minutes / 15) * 15;
     this.#data.updateAppointment({
       ...appointment,
@@ -82,6 +82,17 @@ export class DayComponent {
         Math.floor(minutes / 60),
         minutes % 60,
       ),
+    });
+  }
+
+  editAppointment(appointment: Readonly<Appointment>): void {
+    AppointmentFormComponent.open(
+      this.#matDialog,
+      appointment,
+    ).subscribe(appointment => {
+      if (appointment) {
+        this.#data.updateAppointment(appointment);
+      }
     });
   }
 }

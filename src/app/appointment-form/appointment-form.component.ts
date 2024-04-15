@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { Appointment } from '../data.service';
 import { FormatTimePipe } from '../format-time.pipe';
 
-export type AppointmentFormDialogData = Appointment;
+export type AppointmentFormDialogData = Readonly<Appointment>;
 
 export type AppointmentFormDialogResult =
   | Appointment
@@ -83,7 +83,7 @@ export class AppointmentFormComponent {
   save(): void {
     if (this.form.valid) {
       const result = {
-        id: -1,
+        id: this.#data.id,
         start: new Date(
           this.form.value.startDate!.getFullYear(),
           this.form.value.startDate!.getMonth(),
