@@ -10,6 +10,11 @@
 
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened class="example-sidenav">
+    <mat-calendar
+      [startAt]="date$ | async"
+      (selectedChange)="redirect($event)"
+    />
+
     <div style="flex: auto;"></div>
 
     <app-next-appointment/>
