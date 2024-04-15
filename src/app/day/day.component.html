@@ -10,7 +10,11 @@
 
 <app-current-time-indicator [pixelsPerMinute]="pixelsPerMinute"></app-current-time-indicator>
 
-<div class="appointments" #appointments>
+<div
+  class="appointments"
+  #appointments
+  (dblclick)="addAppointment(($event.clientY - appointments.getBoundingClientRect().top) / pixelsPerMinute)"
+>
   @for (appointment of appointments$ | async; track appointment.id) {
     <app-appointment
       #cdkDrag="cdkDrag"
@@ -21,7 +25,7 @@
       [cdkDragBoundary]="appointments"
       (cdkDragEnded)="setAppointmentStart(appointment, (cdkDrag.element.nativeElement.getBoundingClientRect().top -
       appointments.getBoundingClientRect().top) / pixelsPerMinute);"
-      (dblclick)="editAppointment(appointment)"
+      (dblclick)="editAppointment(appointment); $event.stopPropagation();"
       (delete)="deleteAppointment(appointment)"
     ></app-appointment>
   }

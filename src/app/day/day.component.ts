@@ -112,4 +112,28 @@ export class DayComponent {
       }
     });
   }
+
+  addAppointment(minute: number) {
+    minute = Math.floor(minute / 15) * 15;
+    AppointmentFormComponent.open(
+      this.#matDialog,
+      {
+        id: -1,
+        start: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          Math.floor(minute / 60),
+          minute % 60,
+        ),
+        length: 30,
+        title: '',
+        description: '',
+      }
+    ).subscribe(appointment => {
+      if (appointment) {
+        this.#data.addAppointment(appointment);
+      }
+    });
+  }
 }
