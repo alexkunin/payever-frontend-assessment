@@ -76,7 +76,7 @@ export class AppointmentFormComponent {
   });
 
   readonly startTimes = Array.from({ length: 24 * 60 / 15 }, (_, i) => i * 15);
-  readonly lengths = Array.from({ length: 6 * 60 / 15 }, (_, i) => i * 15);
+  readonly lengths = Array.from({ length: 6 * 60 / 15 - 1 }, (_, i) => (i + 1) * 15);
 
   readonly #matDialogRef: MatDialogRef<AppointmentFormDialogData, AppointmentFormDialogResult> = inject(MatDialogRef);
 
