@@ -2,12 +2,25 @@ import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
+export const appointmentColors = {
+  red: '#FFDDDD',
+  green: '#DDFFDD',
+  blue: '#DDDDFF',
+  yellow: '#FFFFDD',
+  purple: '#FFDDFF',
+  cyan: '#DDFFFF',
+  orange: '#FFCC99',
+};
+
+export type AppointmentColor = keyof typeof appointmentColors;
+
 export interface Appointment {
   id: number;
   start: Date;
   length: number;
   title: string;
   description: string;
+  color: AppointmentColor;
 }
 
 @Injectable({
@@ -30,7 +43,8 @@ export class DataService {
       ),
       length: 240,
       title: 'Payever Assessment',
-      description: 'This is the first appointment'
+      description: 'This is the first appointment',
+      color: 'red',
     });
     this.addAppointment({
       id: -1,
@@ -44,7 +58,8 @@ export class DataService {
       ),
       length: 30,
       title: 'Lunch',
-      description: 'This is the second appointment'
+      description: 'This is the second appointment',
+      color: 'green',
     });
     this.addAppointment({
       id: -1,
@@ -58,7 +73,8 @@ export class DataService {
       ),
       length: 30,
       title: 'Something tomorrow',
-      description: 'This is the third appointment'
+      description: 'This is the third appointment',
+      color: 'blue',
     });
     this.addAppointment({
       id: -1,
@@ -72,7 +88,8 @@ export class DataService {
       ),
       length: 30,
       title: 'Short break',
-      description: 'This is the fifth appointment'
+      description: 'This is the fifth appointment',
+      color: 'cyan',
     });
   }
 

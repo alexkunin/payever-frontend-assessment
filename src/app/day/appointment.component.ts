@@ -2,7 +2,7 @@ import { FormatTimePipe } from '@/shared/format-time.pipe';
 import { Component, input, output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { Appointment } from '../data.service';
+import { Appointment, appointmentColors } from '../data.service';
 
 @Component({
   selector: 'app-appointment',
@@ -13,7 +13,7 @@ import { Appointment } from '../data.service';
     FormatTimePipe,
   ],
   template: `
-    <p>
+    <p [style.background-color]="appointmentColors[data().color]">
       {{ data().start | formatTime }}
       {{ data().title }}
       <button mat-icon-button (click)="delete.emit()">
@@ -37,9 +37,8 @@ import { Appointment } from '../data.service';
       right: 2px;
       min-height: 30px;
       box-sizing: border-box;
-      border: 1px solid skyblue;
+      border: 1px solid rgba(0, 0, 0, 0.1);
       border-radius: 5px;
-      background-color: lightblue;
     }
 
     button {
@@ -53,4 +52,5 @@ import { Appointment } from '../data.service';
 export class AppointmentComponent {
   readonly data = input.required<Appointment>();
   readonly delete = output();
+  protected readonly appointmentColors = appointmentColors;
 }

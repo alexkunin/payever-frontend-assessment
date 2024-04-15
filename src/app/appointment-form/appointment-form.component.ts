@@ -1,3 +1,5 @@
+import { FormatTimePipe } from '@/shared/format-time.pipe';
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -6,10 +8,9 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular
 import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { Observable } from 'rxjs';
-import { Appointment } from '../data.service';
-import { FormatTimePipe } from '@/shared/format-time.pipe';
+import { Appointment, appointmentColors } from '../data.service';
 
 export type AppointmentFormDialogData = Readonly<Appointment>;
 
@@ -28,13 +29,14 @@ export type AppointmentFormDialogResult =
     MatDatepickerToggle,
     MatDatepicker,
     MatDatepickerInput,
-    MatSelect,
+    MatSelectModule,
     MatOption,
     FormatTimePipe,
     MatDialogContent,
     MatDialogActions,
     MatButton,
     MatDialogClose,
+    NgIf,
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -73,10 +75,12 @@ export class AppointmentFormComponent {
       }
     ),
     description: this.#data.description,
+    color: this.#data.color,
   });
 
   readonly startTimes = Array.from({ length: 24 * 60 / 15 }, (_, i) => i * 15);
   readonly lengths = Array.from({ length: 6 * 60 / 15 - 1 }, (_, i) => (i + 1) * 15);
+  readonly colors = Object.entries(appointmentColors).map(([ key, value ]) => ({ key, value }));
 
   readonly #matDialogRef: MatDialogRef<AppointmentFormDialogData, AppointmentFormDialogResult> = inject(MatDialogRef);
 
@@ -94,6 +98,7 @@ export class AppointmentFormComponent {
         length: this.form.value.length!,
         title: this.form.value.title!,
         description: this.form.value.description!,
+        color: this.form.value.color!,
       } satisfies Appointment;
       this.#matDialogRef.close(result);
     }
@@ -102,4 +107,6 @@ export class AppointmentFormComponent {
   static open(matDialog: MatDialog, data: AppointmentFormDialogData): Observable<AppointmentFormDialogResult> {
     return matDialog.open(AppointmentFormComponent, { data }).afterClosed();
   }
+
+  protected readonly appointmentColors = appointmentColors;
 }

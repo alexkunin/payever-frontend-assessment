@@ -169,6 +169,7 @@ export class DayComponent {
         length: 30,
         title: '',
         description: '',
+        color: 'red',
       }
     ).subscribe(appointment => {
       if (appointment) {

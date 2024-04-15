@@ -1,9 +1,25 @@
 <mat-dialog-content [formGroup]="form">
 
-  <div>
-    <mat-form-field>
+  <div style="display: flex; justify-content: space-between;">
+    <mat-form-field style="flex: 3;">
       <mat-label>Title</mat-label>
       <input matInput formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field style="flex: 1;">
+      <mat-label>Color</mat-label>
+      <mat-select formControlName="color" #colorSelect>
+        <mat-select-trigger>
+          <ng-container *ngIf="colorSelect.value">
+            <span class="color-box" [style.background-color]="$any(appointmentColors)[colorSelect.value]"></span>&nbsp;{{ $any(appointmentColors)[colorSelect.value] }}
+          </ng-container>
+        </mat-select-trigger>
+        @for (color of colors; track color.key) {
+          <mat-option [value]="color.key">
+            <span class="color-box" [style.background-color]="color.value"></span>&nbsp;{{ color.value }}
+          </mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
 
