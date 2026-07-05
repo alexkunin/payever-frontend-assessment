@@ -1,5 +1,7 @@
 # Calendar
 
+https://alexkunin.github.io/payever-frontend-assessment/
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
 
 ## Development server
